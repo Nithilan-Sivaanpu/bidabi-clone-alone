@@ -1,46 +1,102 @@
-# bidabi-clone-adapt-create
-# BIDABI : Clone → Adapt → Create
+# Bidabi Clone Alone
 
-Dépôt pédagogique du cours **Big Data and Business Intelligence (BIDABI)**.  
-Ce projet a pour objectif d’initier les étudiants au travail avec du code open‑source, à l’adaptation de projets existants et à la création de leur propre jeu de données d’images.
+Projet de classification d'images de produits alimentaires à l'aide d'un modèle ResNet-18, avec versionnement du code (Git) et des données (DVC).
 
-## 🎯 Objectif du dépôt
-Ce dépôt sert de **plateforme d’apprentissage** où les étudiants réalisent un cycle complet de travail en data et en machine learning :
+## Structure du projet
 
-- cloner un projet open‑source depuis GitHub
-- analyser sa structure, ses dépendances et son fonctionnement
-- adapter le code à un nouveau contexte
-- créer un jeu de données d’images personnalisé
-- intégrer ce jeu de données dans un pipeline ML existant
+'''
+bidabi-clone-alone/
+├── src/
+│   ├── asyscrapper.py       # Scrapper pour collecter les données
+│   ├── classificator.py     # Pipeline d'entraînement ResNet-18
+│   └── data_loader.py       # Chargement des données
+├── data/
+│   ├── raw/
+│   │   ├── images/          # Images par catégorie
+│   │   │   ├── bread/
+│   │   │   ├── butter/
+│   │   │   ├── milk/
+│   │   │   └── sugar/
+│   │   └── metadata_<categorie>.csv
+│   └── localstore/          # Remote DVC local
+├── requirements.txt
+├── .gitignore
+└── README.md
+'''
 
-L’objectif est de reproduire des situations réelles rencontrées par les ingénieurs data et ML lorsqu’ils doivent réutiliser et modifier du code provenant d’autres développeurs.
+## Prérequis
 
-## 🎓 Public visé
-Ce projet est destiné aux étudiants du cours **BIDABI**, notamment ceux qui s’intéressent à :
+- Python 3.12
+- Git
+- DVC
 
-- l’apprentissage automatique
-- l’ingénierie des données
-- la reproductibilité des expériences
-- l’utilisation de GitHub et des projets open‑source
+## Installation
 
-## 🧩 Contenu du dépôt
-Le dépôt inclura :
+1. Cloner le dépôt
+```bash
+git clone git@github.com:<votre-utilisateur>/bidabi-clone-alone.git
+cd bidabi-clone-alone
+```
 
-- des exemples de code à analyser et adapter
-- un modèle de structure pour le jeu de données
-- des consignes pour les travaux pratiques
-- des instructions pour exécuter et modifier le projet
+2. Créer et activer l'environnement virtuel
+```bash
+py -3.12 -m venv .venv
+.venv\Scripts\Activate
+```
 
-## 🛠️ Compétences développées
-Les étudiants apprendront à :
+3. Installer les dépendances
+```bash
+pip install -r requirements.txt
+```
 
-- lire et comprendre du code écrit par d’autres
-- manipuler des dépôts GitHub
-- concevoir et organiser un jeu de données d’images
-- intégrer des données dans un pipeline ML
-- documenter leur travail de manière claire et reproductible
+4. Récupérer les données avec DVC
+```bash
+dvc pull
+```
 
-## 📄 Licence et usage
-Ce dépôt est destiné **exclusivement à des fins pédagogiques** dans le cadre du cours BIDABI.  
-Le code et les ressources peuvent être simplifiés ou modifiés pour faciliter l’apprentissage.
+## Collecte des données
 
+Pour collecter les images d'une catégorie, modifier `CATEGORY` dans `src/asyscrapper.py` :
+
+```python
+CATEGORY = "sugar"  # "bread", "milk", "butter"
+```
+
+Puis lancer :
+```bash
+python src/asyscrapper.py
+```
+
+Les images seront sauvegardées dans `data/raw/images/<categorie>/` et les métadonnées dans `data/raw/metadata_<categorie>.csv`.
+
+## Entraînement du modèle
+
+```bash
+python src/classificator.py
+```
+
+Le pipeline effectue :
+- Chargement du dataset (4 catégories)
+- Séparation train/val/test (60/20/20)
+- Entraînement ResNet-18 avec MixUp et augmentations
+- Early stopping (patience=3)
+- Évaluation : matrice de confusion, courbes ROC, accuracy par classe
+- Sauvegarde du meilleur modèle dans `best_model_resnet18_finetuned.pth`
+
+## Versionnement des données avec DVC
+
+```bash
+dvc add data/raw
+git add data/raw.dvc
+git commit -m "Update dataset"
+dvc push
+```
+
+## Versions du projet
+
+| Tag | Description |
+|-----|-------------|
+| v1.0 | Version initiale du projet |
+| v2.0 | Nouveau scrapper et données RAW |
+| v2.1 | Dataset RAW versionné avec DVC |
+| v3.0 | Pipeline complet d'entraînement |
