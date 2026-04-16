@@ -9,7 +9,7 @@ HEADERS = {"User-Agent": "MyAwesomeApp/1.0"}
 
 OUTPUT_DIR = "data"
 
-CATEGORY = "sugar" #"bread", "milk", "champagnes", "butter" 
+CATEGORY = "champagnes" #"bread", "milk", "champagnes", "butter" 
 TARGET_COUNT = 180
 PAGE_SIZE = 100
 MAX_PAGES = 50
@@ -157,8 +157,8 @@ def save_to_csv(filename, rows):
 # -------------------------
 def main():
     products = asyncio.run(scrape(CATEGORY, TARGET_COUNT, PAGE_SIZE, MAX_PAGES))
-    output_file = f"data/raw/images/{CATEGORY}/metadata_{CATEGORY}.csv"
-    os.makedirs(f"data/raw/images/{CATEGORY}", exist_ok=True)
+    output_file = f"data/raw/metadata_{CATEGORY}.csv"
+    os.makedirs(f"data/raw", exist_ok=True)
     save_to_csv(output_file, products)
     print(f"✔ Fichier {output_file} créé. Produits valides collectés : {len(products)}")
 

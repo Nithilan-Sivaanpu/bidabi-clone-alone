@@ -57,8 +57,8 @@ set_seed(42)
 H = 256
 W = 256
 BATCH_SIZE = 32
-DATA_DIR = "./Flipkart/Sorted/"
-NUM_EPOCHS = 20
+DATA_DIR = "data/raw/images/"
+NUM_EPOCHS = 5
 PATIENCE = 3
 
 # --- Transformations ---
@@ -450,7 +450,7 @@ def compute_per_class_accuracy(model, loader, num_classes):
 
             outputs = model(images)
             _, predicted = torch.max(outputs, 1)
-            matches = (predicted == labels).squeeze()
+            matches = (predicted == labels)
 
             for i in range(len(labels)):
                 label = labels[i].item()
