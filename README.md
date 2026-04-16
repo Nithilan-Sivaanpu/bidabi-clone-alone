@@ -4,7 +4,7 @@ Projet de classification d'images de produits alimentaires à l'aide d'un modèl
 
 ## Structure du projet
 
-'''
+```
 bidabi-clone-alone/
 ├── src/
 │   ├── asyscrapper.py       # Scrapper pour collecter les données
@@ -22,7 +22,7 @@ bidabi-clone-alone/
 ├── requirements.txt
 ├── .gitignore
 └── README.md
-'''
+```
 
 ## Prérequis
 
